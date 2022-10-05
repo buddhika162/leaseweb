@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ServerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ServerRepository::class)]
@@ -24,6 +26,14 @@ class Server
 
     #[ORM\Column]
     private ?int $price = null;
+
+    #[ORM\OneToMany(mappedBy: 'serverId', targetEntity: ServerRamModule::class, orphanRemoval: true)]
+    private Collection $ramId;
+
+    public function __construct()
+    {
+        $this->ramId = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -74,6 +84,36 @@ class Server
     public function setPrice(int $price): self
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ServerRamModule>
+     */
+    public function getRamId(): Collection
+    {
+        return $this->ramId;
+    }
+
+    public function addRamId(ServerRamModule $ramId): self
+    {
+        if (!$this->ramId->contains($ramId)) {
+            $this->ramId->add($ramId);
+            $ramId->setServerId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRamId(ServerRamModule $ramId): self
+    {
+        if ($this->ramId->removeElement($ramId)) {
+            // set the owning side to null (unless already changed)
+            if ($ramId->getServerId() === $this) {
+                $ramId->setServerId(null);
+            }
+        }
 
         return $this;
     }
