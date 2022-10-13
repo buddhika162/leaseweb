@@ -21,7 +21,7 @@ class RamModuleRepository extends ServiceEntityRepository
         parent::__construct($registry, RamModule::class);
     }
 
-    public function save(RamModule $entity, bool $flush = false): void
+    public function save(RamModule $entity, bool $flush = true): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class RamModuleRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(RamModule $entity, bool $flush = false): void
+    public function remove(RamModule $entity, bool $flush = true): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -39,20 +39,16 @@ class RamModuleRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return RamModule[] Returns an array of RamModule objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('r.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return RamModule[] Returns an array of RamModule objects
+     */
+    public function getAll(): array
+    {
+        return $this->createQueryBuilder('r')
+            ->orderBy('r.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 
 //    public function findOneBySomeField($value): ?RamModule
 //    {

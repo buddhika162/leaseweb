@@ -2,13 +2,14 @@
 
 namespace App\Tests;
 
+use App\DataFixtures\RamModuleFixtures;
+use App\DataFixtures\ServerFixtures;
+use App\DataFixtures\ServerRamModuleFixtures;
 use App\Entity\Server;
 use App\Repository\ServerRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class ServerTest extends KernelTestCase
+class ServerRepositoryTest extends FixtureAwareTestCase
 {
     /**
      * @var EntityManagerInterface
@@ -21,6 +22,10 @@ class ServerTest extends KernelTestCase
 
         $this->entityManager = $kernel->getContainer()->get("doctrine")->getManager();
         $this->managerRegistery = $kernel->getContainer()->get("doctrine");
+        $this->addFixture(new RamModuleFixtures());
+        $this->addFixture(new ServerFixtures());
+        $this->addFixture(new ServerRamModuleFixtures());
+        $this->executeFixtures();
     }
 
     protected function tearDown(): void
@@ -33,7 +38,7 @@ class ServerTest extends KernelTestCase
     /*
      *
      */
-    public function testGetAllServers()
+    public function testSave()
     {
         $server = new Server();
         $server->setAssetId(123456);
@@ -49,6 +54,55 @@ class ServerTest extends KernelTestCase
         $this->assertEquals("R210",$savedServer->getName());
         $this->assertEquals("Dell",$savedServer->getBrand());
         $this->assertEquals(500,$savedServer->getPrice());
+    }
+
+    public function testGetAll()
+    {
+
+        $serverRepository = new ServerRepository($this->managerRegistery);
+        $servers = $serverRepository->getAll();
+        $this->assertEquals(2,count($servers));
+
+        $this->assertEquals(123456,$servers[0]->getAssetId());
+        $this->assertEquals("RE201",$servers[0]->getName());
+        $this->assertEquals("Dell",$servers[0]->getBrand());
+        $this->assertEquals(600,$servers[0]->getPrice());
+
+        $server1RamModules = $servers[0]->getServerRamModules();
+
+        $this->assertEquals(2,count($server1RamModules));
+
+        $this->assertEquals(1,$server1RamModules[0]->getRam()->getId());
+
+        $this->assertEquals(2,$server1RamModules[1]->getRam()->getId());
+
+        $this->assertEquals(234567,$servers[1]->getAssetId());
+        $this->assertEquals("RE202",$servers[1]->getName());
+        $this->assertEquals("Acer",$servers[1]->getBrand());
+        $this->assertEquals(500,$servers[1]->getPrice());
+
+        $server2RamModules = $servers[1]->getServerRamModules();
+
+        $this->assertEquals(1,count($server2RamModules));
+
+        $this->assertEquals(2,$server2RamModules[0]->getRam()->getId());
+    }
+
+
+    public function testRemove()
+    {
+
+        $serverRepository = new ServerRepository($this->managerRegistery);
+        $servers = $serverRepository->getAll();
+        $this->assertEquals(2,count($servers));
+        $serverRepository->remove($servers[1]);
+        $servers = $serverRepository->getAll();
+        $this->assertEquals(1,count($servers));
+
+        $this->assertEquals(123456,$servers[0]->getAssetId());
+        $this->assertEquals("RE201",$servers[0]->getName());
+        $this->assertEquals("Dell",$servers[0]->getBrand());
+        $this->assertEquals(600,$servers[0]->getPrice());
     }
 
 }

@@ -15,37 +15,37 @@ class ServerRamModule
 
     #[ORM\ManyToOne(inversedBy: 'serverRamModules')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Server $serverId = null;
+    private ?Server $server = null;
 
     #[ORM\ManyToOne(inversedBy: 'serverRamModules')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?RamModule $ramId = null;
+    private ?RamModule $ram = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getServerId(): ?Server
+    public function getServer(): ?Server
     {
-        return $this->serverId;
+        return $this->server;
     }
 
-    public function setServerId(?Server $serverId): self
+    public function setServer(?Server $serverId): self
     {
-        $this->serverId = $serverId;
+        $this->server = $serverId;
 
         return $this;
     }
 
-    public function getRamId(): ?RamModule
+    public function getRam(): ?RamModule
     {
-        return $this->ramId;
+        return $this->ram;
     }
 
-    public function setRamId(?RamModule $ramId): self
+    public function setRam(?RamModule $ramId): self
     {
-        $this->ramId = $ramId;
+        $this->ram = $ramId;
 
         return $this;
     }

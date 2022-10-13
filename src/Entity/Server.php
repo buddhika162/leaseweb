@@ -27,12 +27,12 @@ class Server
     #[ORM\Column]
     private ?int $price = null;
 
-    #[ORM\OneToMany(mappedBy: 'serverId', targetEntity: ServerRamModule::class, orphanRemoval: true)]
-    private Collection $ramId;
+    #[ORM\OneToMany(mappedBy: 'server', targetEntity: ServerRamModule::class, orphanRemoval: true)]
+    private Collection $serverRamModules;
 
     public function __construct()
     {
-        $this->ramId = new ArrayCollection();
+        $this->serverRamModules = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -91,16 +91,16 @@ class Server
     /**
      * @return Collection<int, ServerRamModule>
      */
-    public function getRamId(): Collection
+    public function getServerRamModules(): Collection
     {
-        return $this->ramId;
+        return $this->serverRamModules;
     }
 
-    public function addRamId(ServerRamModule $ramId): self
+    public function addServerRamModule(ServerRamModule $serverRamModule): self
     {
-        if (!$this->ramId->contains($ramId)) {
-            $this->ramId->add($ramId);
-            $ramId->setServerId($this);
+        if (!$this->serverRamModules->contains($serverRamModule)) {
+            $this->serverRamModules->add($serverRamModule);
+            $serverRamModule->setServer($this);
         }
 
         return $this;
@@ -110,8 +110,8 @@ class Server
     {
         if ($this->ramId->removeElement($ramId)) {
             // set the owning side to null (unless already changed)
-            if ($ramId->getServerId() === $this) {
-                $ramId->setServerId(null);
+            if ($ramId->getServer() === $this) {
+                $ramId->setServer(null);
             }
         }
 

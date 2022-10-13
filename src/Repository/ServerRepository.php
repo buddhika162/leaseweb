@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Server;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,7 +23,7 @@ class ServerRepository extends ServiceEntityRepository
         parent::__construct($registry, Server::class);
     }
 
-    public function save(Server $entity, bool $flush = false): void
+    public function save(Server $entity, bool $flush = true): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +32,7 @@ class ServerRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Server $entity, bool $flush = false): void
+    public function remove(Server $entity, bool $flush = true): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -39,26 +41,16 @@ class ServerRepository extends ServiceEntityRepository
         }
     }
 
-    public function add(Server $entity): void
+    /**
+     * @return Server[] Returns an array of Server objects
+     */
+    public function getAll(): array
     {
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
+        return $this->createQueryBuilder('s')
+            ->orderBy('s.id', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
-
-//    /**
-//     * @return Server[] Returns an array of Server objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
 
 //    public function findOneBySomeField($value): ?Server
 //    {

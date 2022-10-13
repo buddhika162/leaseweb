@@ -70,7 +70,7 @@ class RamModule
     {
         if (!$this->serverRamModules->contains($serverRamModule)) {
             $this->serverRamModules->add($serverRamModule);
-            $serverRamModule->setRamId($this);
+            $serverRamModule->setRam($this);
         }
 
         return $this;
@@ -80,8 +80,8 @@ class RamModule
     {
         if ($this->serverRamModules->removeElement($serverRamModule)) {
             // set the owning side to null (unless already changed)
-            if ($serverRamModule->getRamId() === $this) {
-                $serverRamModule->setRamId(null);
+            if ($serverRamModule->getRam() === $this) {
+                $serverRamModule->setRam(null);
             }
         }
 
