@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\RamModule;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -48,6 +50,18 @@ class RamModuleRepository extends ServiceEntityRepository
             ->orderBy('r.id', 'ASC')
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @return integer[] Returns an array of RamModule ids
+     */
+    public function getAllRamModuleIds(): array
+    {
+        return $this->createQueryBuilder('r')
+            ->select('r.id')
+            ->orderBy('r.id', 'ASC')
+            ->getQuery()
+            ->getResult(AbstractQuery::HYDRATE_SCALAR_COLUMN);
     }
 
 //    public function findOneBySomeField($value): ?RamModule

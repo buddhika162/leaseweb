@@ -27,7 +27,7 @@ class Server
     #[ORM\Column]
     private ?int $price = null;
 
-    #[ORM\OneToMany(mappedBy: 'server', targetEntity: ServerRamModule::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'server', targetEntity: ServerRamModule::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $serverRamModules;
 
     public function __construct()

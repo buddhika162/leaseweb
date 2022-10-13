@@ -13,7 +13,7 @@ class ServerRamModule
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'serverRamModules')]
+    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'serverRamModules')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Server $server = null;
 
@@ -31,9 +31,9 @@ class ServerRamModule
         return $this->server;
     }
 
-    public function setServer(?Server $serverId): self
+    public function setServer(?Server $server): self
     {
-        $this->server = $serverId;
+        $this->server = $server;
 
         return $this;
     }
@@ -43,9 +43,9 @@ class ServerRamModule
         return $this->ram;
     }
 
-    public function setRam(?RamModule $ramId): self
+    public function setRam(?RamModule $ram): self
     {
-        $this->ram = $ramId;
+        $this->ram = $ram;
 
         return $this;
     }

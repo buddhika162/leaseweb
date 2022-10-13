@@ -52,6 +52,25 @@ class ServerRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getAllAssetIds(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->select('s.assetId')
+            ->orderBy('s.id', 'ASC')
+            ->getQuery()
+            ->getResult(AbstractQuery::HYDRATE_SCALAR_COLUMN);
+    }
+
+    public function deleteMultipleByAssetId($assetIds)
+    {
+        return $this->createQueryBuilder('s')
+            ->delete()
+            ->where('s.assetId in (:assetIds)')
+            ->setParameter(':assetIds',$assetIds)
+            ->getQuery()
+            ->execute();
+    }
+
 //    public function findOneBySomeField($value): ?Server
 //    {
 //        return $this->createQueryBuilder('s')
