@@ -42,7 +42,7 @@ class ServerTest extends KernelTestCase
         $server->setPrice(500);
 
         $serverRepository = new ServerRepository($this->managerRegistery);
-        $serverRepository->add($server);
+        $serverRepository->save($server);
         $savedServer = $serverRepository->findOneBy(['name' => 'R210']);
         $this->assertNotNull($savedServer->getId());
         $this->assertEquals(123456,$savedServer->getAssetId());
